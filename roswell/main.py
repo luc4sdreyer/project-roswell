@@ -149,7 +149,7 @@ def api():
 
 @app.route("/")
 def main():
-    return "Welcome!"
+    return app.send_static_file('index.html')
 
 
 def cli(host, port, debug):
