@@ -1,4 +1,4 @@
-from rootinsurance.utils import ID, Cellphone
+from roswell.rootinsurance.utils import ID, Cellphone
 
 
 class PolicyHolder(object):

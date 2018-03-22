@@ -1,8 +1,8 @@
 import requests
 
-from rootinsurance.policy import Application
-from rootinsurance.policyholder import PolicyHolder
-from rootinsurance.quote import GadgetQuote
+from roswell.rootinsurance.policy import Application
+from roswell.rootinsurance.policyholder import PolicyHolder
+from roswell.rootinsurance.quote import GadgetQuote, TermQuote
 
 
 class RootInsurance(object):
@@ -15,7 +15,8 @@ class RootInsurance(object):
         if json:
             response = requests.post(self._base + path, json=json, auth=(self._key, ""))
         else:
-            response = requests.post(self._base + path, data=kwargs, auth=(self._key, ""))
+            headers = {"Content-Type": "application/x-www-form-urlencoded"}
+            response = requests.post(self._base + path, data=kwargs, headers=headers, auth=(self._key, ""))
         return response
 
     def put(self, path, **params):
@@ -32,8 +33,16 @@ class RootInsurance(object):
 
 
 def main():
-    # root = RootInsurance(sandbox=True, key="")
-    # quotes = GadgetQuote(root, model_name='iPhone 6s 64GB LTE').get_quote()
+    root = RootInsurance(sandbox=True,
+                         key="sandbox_NzNmN2UzZDEtYzA2Ny00Y2I2LTgxMTItODdiMjU1ZjYzZTQ5LnNrZDMtc05yaVJsMHR4eEZ1aEZZWXVsMzZwTGNLeFBO")
+    quotes = TermQuote(root,
+                       cover_amount=50000000,
+                       cover_period='1_year',
+                       basic_income_per_month=1500000,
+                       education_status='undergraduate_degree',
+                       smoker=False,
+                       gender='male',
+                       age=33).get_quote()
     # policyHolder = PolicyHolder.get(root, "de7548d0-11db-45db-a05c-773c4fa19b18")
     # # policyHolder = PolicyHolder(SouthAfricanID(number="1234567"),
     # #                             date_of_birth="19840524",
@@ -54,4 +63,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
