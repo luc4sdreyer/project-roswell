@@ -99,11 +99,11 @@ def api():
                                                  lastname=parameters['first_name'],
                                                  id=id, email=None, cellphone=None)
             application = Application.apply(quote[0], policy_holder, quote[0].suggested_premium)
-            policy = Policy.issue(application=application, )
+            policy = Policy.issue(application=application)
 
-
-
-
+            state[sessionid].update({'policy': policy})
+            response = "Congratulations! you are now have your very own tin-foil hat!"
+            return jsonify({"speech": response, "displayText": response})
 
         #     response = "I am afraid I don't know about %s" % raw_coin
         #     return jsonify({"speech": response, "displayText": response})
