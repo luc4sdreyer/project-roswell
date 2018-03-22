@@ -19,8 +19,11 @@ class Quote(object):
             return GadgetQuote(root, **primitive)
 
     def get_quote(self):
-        response = self._root.post('quotes', **self.to_primitive())
+        response = self._root.post('quote', **self.to_primitive())
         # TODO: add some error checking
+        print("Response [%s] - %s" % (response.status_code, response.text))
+        if response.status_code != 200:
+            raise AttributeError("Invalid Quote")
         return [QuotePackage(self._root, **x) for x in response.json()]
 
 
@@ -58,7 +61,7 @@ class FuneralQuote(Quote):
 class TermQuote(Quote):
     DURATION_1_YEAR = '1_year'
     DURATION_2_YEAR = '2_years'
-    DURATION_5_YEAR = '3_years'
+    DURATION_5_YEAR = '5_years'
     DURATION_10_YEAR = '10_years'
     DURATION_15_YEAR = '15_years'
     DURATION_20_YEAR = '20_years'
@@ -83,7 +86,7 @@ class TermQuote(Quote):
             'education_status': education_status,
             'smoker': smoker,
             'gender': gender,
-            'age': age
+            'age': 18
         }
         super(TermQuote, self).__init__(root, **opts)
 
