@@ -1,0 +1,48 @@
+# Afterlife conversation
+
+Human: "Hi I'm looking for insurance"
+
+Bot: "Great! What is your cover amount? (i.e. R10,000.00)"
+
+Human: "${ cover_amount }"
+
+Bot: "Let's setup your policy..."
+
+# Generate a quote
+Bot: "We've generated a quote for cover of ${ cover_amount } for ${ premium } per month."
+
+Bot: "Do you accept this quote?"
+
+Human: "${ accept_quote }"
+
+Bot: "We need a few details regarding the cover:"
+Bot: "Who is the policy holder? ${ first_name and last_name }"
+
+Human: "${ first_name and last_name }"
+
+Bot: "What is the policy holders SA ID Number? ${ id_number }"
+
+Human: "${ id_number }"
+
+Bot: "Thank you, we're busy crunching the numbers."
+
+# Create a policy
+# Create an application
+# Issue a policy
+
+Bot: "Sweet! Please check your email for the policy we just sent."
+
+# Add beneficiaries
+
+Bot: "Lastly, who is your beneficiary? This person will receive the payout at your eventual demise."
+
+Human: "${ first_name and last_name }"
+
+Bot: "What is their SA ID Number? ${ id_number }"
+
+Human: "${ id_number }"
+
+Bot: "Great, we've sent you another email with the updated policy. This will take effective on your first premium payment."
+Bot: "Good luck! We hope you live long and prosper... this is a win-win for both of us."
+
+
