@@ -6,6 +6,10 @@ Bot: "Great! What is your cover amount? (i.e. R10,000.00)"
 
 Human: "${ cover_amount }"
 
+Bot: "Period, gender, age"
+
+Human: "${ answer }"
+
 Bot: "Let's setup your policy..."
 
 # Generate a quote
