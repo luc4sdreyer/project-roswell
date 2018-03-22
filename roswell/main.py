@@ -10,12 +10,38 @@ from rootinsurance.root import RootInsurance
 from rootinsurance.utils import SouthAfricanID, Cellphone
 
 from datetime import datetime
+import random
 
 app = Flask(__name__)
 root = RootInsurance(
     key="sandbox_NzNmN2UzZDEtYzA2Ny00Y2I2LTgxMTItODdiMjU1ZjYzZTQ5LnNrZDMtc05yaVJsMHR4eEZ1aEZZWXVsMzZwTGNLeFBO")
 ai = apiai.ApiAI("3cb50c0369bf48a4882be6edf1eb526a")
 state = defaultdict(dict)
+
+
+def _random_id_number():
+    return _get_id_number(sequence=str(random.randint(999)))
+
+
+def _get_id_number(year='86', month='05', day='06', gender='male', sequence='000'):
+    id_num = '%s%s%s%s%s08' % (year, month, day, 4 if gender == 'female' else 5, sequence)
+    odd = 0
+    for i in xrange(len(id_num)):
+        if (i % 2) == 0:
+            odd += int(id_num[i])
+
+    even = ''
+    for i in xrange(len(id_num)):
+        if (i % 2) == 1:
+            even += id_num[i]
+
+    even = int(even) * 2
+    even = sum(map(lambda x: int(x), str(even)))
+    total = even + odd
+
+    control = str(10 - int(str(total)[-1]))
+    id_num += control
+    return id_num
 
 
 def _create_policyholder(firstname, lastname, id, email=None, cellphone=None):
@@ -83,6 +109,9 @@ def api():
         parameters = req['result']['parameters']
         sessionid = req['sessionId']
         if parameters['request_type'] == 'quote':
+            id_number = _get_id_number()
+            parameters['id_number'] = id_number
+
             quote = _create_quote(cover_amount=parameters['cover_amount'],
                                   cover_period=_get_period(parameters['period']),
                                   gender=_gender_from_id(parameters['id_number']),
@@ -130,6 +159,11 @@ def api():
         return jsonify({})
     except AttributeError as e:
         return jsonify({"speech": e, "displayText": e})
+
+
+@app.route("/")
+def main():
+    return "Welcome!"
 
 
 def cli(host, port, debug):
