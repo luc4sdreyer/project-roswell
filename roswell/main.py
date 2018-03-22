@@ -1,4 +1,6 @@
 from collections import defaultdict
+
+import apiai
 from flask import Flask, request, jsonify
 
 from rootinsurance.policy import Application, Policy
@@ -12,7 +14,7 @@ from datetime import datetime
 app = Flask(__name__)
 root = RootInsurance(
     key="sandbox_NzNmN2UzZDEtYzA2Ny00Y2I2LTgxMTItODdiMjU1ZjYzZTQ5LnNrZDMtc05yaVJsMHR4eEZ1aEZZWXVsMzZwTGNLeFBO")
-
+ai = apiai.ApiAI("3cb50c0369bf48a4882be6edf1eb526a")
 state = defaultdict(dict)
 
 
@@ -66,7 +68,7 @@ def _age_from_id(param):
     now = datetime.now()
     birthday = datetime.strptime(dateStr, '%y%m%d')
     difference = now - birthday
-    return int(difference.days/365.25)
+    return int(difference.days / 365.25)
 
 
 def cents_to_rands(suggested_premium):
@@ -95,14 +97,26 @@ def api():
             quote = state[sessionid]['quote']
             id = state[sessionid]['id_number']
 
-            policy_holder = _create_policyholder(firstname=parameters['last_name'],
-                                                 lastname=parameters['first_name'],
+            policy_holder = _create_policyholder(firstname=parameters['first_name'],
+                                                 lastname=parameters['last_name'],
                                                  id=id, email=None, cellphone=None)
             application = Application.apply(quote[0], policy_holder, quote[0].suggested_premium)
+            state[sessionid].update({'application': application, 'policy_holder': policy_holder})
+
+            r = ai.text_request()
+            r.session_id = sessionid
+            r.query = "Hello"
+            r.getresponse()
+
+            response = "One more step to go :) Happy to go ahead?"
+            return jsonify({"speech": response, "displayText": response})
+
+        if parameters['request_type'] == 'confirm':
+            application = state[sessionid]['application']
             policy = Policy.issue(application=application)
 
             state[sessionid].update({'policy': policy})
-            response = "Congratulations! you are now have your very own tin-foil hat!"
+            response = "Congratulations! you are now have your very own tin-foil hat! Your policy number is: " + policy.policy_number
             return jsonify({"speech": response, "displayText": response})
 
         #     response = "I am afraid I don't know about %s" % raw_coin
