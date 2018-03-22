@@ -1,4 +1,4 @@
-from roswell.rootinsurance.utils import ID, Cellphone
+from rootinsurance.utils import ID, Cellphone
 
 
 class PolicyHolder(object):
@@ -10,7 +10,7 @@ class PolicyHolder(object):
             self._id = ID.from_primitive(id)
         else:
             self._id = id
-        if isinstance(cellphone, dict):
+        if cellphone and isinstance(cellphone, dict):
             self._cellphone = Cellphone.from_primitive(cellphone)
         else:
             self._cellphone = cellphone
@@ -93,8 +93,7 @@ class PolicyHolder(object):
                 'id': self.id.to_primitive(),
                 'date_of_birth': self.date_of_birth,
                 'first_name': self.first_name,
-                'last_name': self.last_name,
-                'gender': self.gender
+                'last_name': self.last_name
             }
             if self.email:
                 params['email'] = self.email

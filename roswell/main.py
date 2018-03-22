@@ -1,10 +1,11 @@
 from collections import defaultdict
 from flask import Flask, request, jsonify
 
-from roswell.rootinsurance.policyholder import PolicyHolder
-from roswell.rootinsurance.quote import TermQuote
-from roswell.rootinsurance.root import RootInsurance
-from roswell.rootinsurance.utils import SouthAfricanID, Cellphone
+from rootinsurance.policy import Application, Policy
+from rootinsurance.policyholder import PolicyHolder
+from rootinsurance.quote import TermQuote
+from rootinsurance.root import RootInsurance
+from rootinsurance.utils import SouthAfricanID, Cellphone
 
 from datetime import datetime
 
@@ -20,7 +21,7 @@ def _create_policyholder(firstname, lastname, id, email=None, cellphone=None):
                                 first_name=firstname,
                                 last_name=lastname,
                                 email=email,
-                                cellphone=Cellphone(number=cellphone))
+                                cellphone=(Cellphone(number=cellphone) if cellphone else None))
     return policyHolder.save(root)
 
 
@@ -92,9 +93,16 @@ def api():
 
         if parameters['request_type'] == 'buy_policy':
             quote = state[sessionid]['quote']
-            id = state[sessionid]['id']
+            id = state[sessionid]['id_number']
 
-            # policy_holder = _create_policyholder(firstname, lastname, id, email=None, cellphone=None)
+            policy_holder = _create_policyholder(firstname=parameters['last_name'],
+                                                 lastname=parameters['first_name'],
+                                                 id=id, email=None, cellphone=None)
+            application = Application.apply(quote[0], policy_holder, quote[0].suggested_premium)
+            policy = Policy.issue(application=application, )
+
+
+
 
 
         #     response = "I am afraid I don't know about %s" % raw_coin
@@ -107,7 +115,7 @@ def api():
         #     response = "The price of %s is $%s" % (currency[coin], price['USD'])
         return jsonify({})
     except AttributeError as e:
-        return jsonify({"speech": e.message, "displayText": e.message})
+        return jsonify({"speech": e, "displayText": e})
 
 
 def cli(host, port, debug):

@@ -1,4 +1,4 @@
-from roswell.rootinsurance.utils import Cellphone, ID
+from rootinsurance.utils import Cellphone, ID
 
 
 class Application(object):
@@ -115,8 +115,6 @@ class Policy(object):
 
         primitive_beneficiaries = [x.to_primitive() for x in beneficiaries]
         response = self._root.put("policy/" + self.policy_id + "/beneficiaries", json=primitive_beneficiaries)
-
-
 
     @staticmethod
     def issue(application, app_data={}):

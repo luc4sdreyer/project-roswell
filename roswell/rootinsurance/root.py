@@ -1,8 +1,6 @@
 import requests
 
-from roswell.rootinsurance.policy import Application
-from roswell.rootinsurance.policyholder import PolicyHolder
-from roswell.rootinsurance.quote import GadgetQuote, TermQuote
+from rootinsurance.quote import GadgetQuote, TermQuote
 
 
 class RootInsurance(object):

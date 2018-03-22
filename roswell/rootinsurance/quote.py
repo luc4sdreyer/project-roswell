@@ -86,7 +86,7 @@ class TermQuote(Quote):
             'education_status': education_status,
             'smoker': smoker,
             'gender': gender,
-            'age': 18
+            'age': age
         }
         super(TermQuote, self).__init__(root, **opts)
 
