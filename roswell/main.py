@@ -1,6 +1,5 @@
 from collections import defaultdict
 
-# import apiai
 from flask import Flask, request, jsonify
 
 from rootinsurance.policy import Application, Policy
@@ -15,6 +14,7 @@ import random
 app = Flask(__name__)
 root = RootInsurance(
     key="sandbox_NzNmN2UzZDEtYzA2Ny00Y2I2LTgxMTItODdiMjU1ZjYzZTQ5LnNrZDMtc05yaVJsMHR4eEZ1aEZZWXVsMzZwTGNLeFBO")
+# import apiai
 # ai = apiai.ApiAI("3cb50c0369bf48a4882be6edf1eb526a")
 state = defaultdict(dict)
 
