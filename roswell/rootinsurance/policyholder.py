@@ -102,6 +102,7 @@ class PolicyHolder(object):
             if self.app_data:
                 params['app_data'] = self.app_data
             response = root.post("policyholders", json=params)
+            print("Response [%s] - %s" % (response.status_code, response.text))
         return PolicyHolder(bound=True, root=root, **(response.json()))
 
     @staticmethod

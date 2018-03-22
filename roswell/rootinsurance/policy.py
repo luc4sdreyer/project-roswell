@@ -20,6 +20,7 @@ class Application(object):
         _v.update(quotepackage.get_requirements())
 
         response = _root.post("applications", **_v)
+        print("Response [%s] - %s" % (response.status_code, response.text))
         return Application(_root, **response.json())
 
 
@@ -72,6 +73,7 @@ class Policy(object):
         if self.app_data:
             params['app_data'] = self.app_data
         response = self._root.patch("policy/" + self.policy_id, **params)
+        print("Response [%s] - %s" % (response.status_code, response.text))
         return Policy(bound=True, root=self._root, **(response.json()))
 
     def cancel(self, reason=""):
@@ -94,18 +96,21 @@ class Policy(object):
         if self.app_data:
             params['billing_amount'] = billing_amount
         response = self._root.post("policy/" + self.policy_id + "/billing", **params)
+        print("Response [%s] - %s" % (response.status_code, response.text))
         return Policy(bound=True, root=self._root, **(response.json()))
 
     def events(self):
         if not self._bound:
             return []
         response = self._root.get("policy/" + self.policy_id + "/events")
+        print("Response [%s] - %s" % (response.status_code, response.text))
         return response.json()
 
     def beneficiaries(self):
         if not self._bound:
             return []
         response = self._root.get("policy/" + self.policy_id + "/beneficiaries")
+        print("Response [%s] - %s" % (response.status_code, response.text))
         return [Beneficiary(**x) for x in response.json()]
 
     def update_beneficiaries(self, beneficiaries):
@@ -115,6 +120,7 @@ class Policy(object):
 
         primitive_beneficiaries = [x.to_primitive() for x in beneficiaries]
         response = self._root.put("policy/" + self.policy_id + "/beneficiaries", json=primitive_beneficiaries)
+        print("Response [%s] - %s" % (response.status_code, response.text))
 
     @staticmethod
     def issue(application, app_data={}):
@@ -124,11 +130,13 @@ class Policy(object):
             'app_data': app_data
         }
         response = _root.post("policies", **_v)
+        print("Response [%s] - %s" % (response.status_code, response.text))
         return Policy(_root, **response.json())
 
     @staticmethod
     def list(root, id_number=""):
         response = root.get("policies/" + id_number)
+        print("Response [%s] - %s" % (response.status_code, response.text))
         return [Policy(root, bound=True, **x) for x in response.json()]
 
     @staticmethod
