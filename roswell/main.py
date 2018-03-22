@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-import apiai
+# import apiai
 from flask import Flask, request, jsonify
 
 from rootinsurance.policy import Application, Policy
@@ -15,12 +15,12 @@ import random
 app = Flask(__name__)
 root = RootInsurance(
     key="sandbox_NzNmN2UzZDEtYzA2Ny00Y2I2LTgxMTItODdiMjU1ZjYzZTQ5LnNrZDMtc05yaVJsMHR4eEZ1aEZZWXVsMzZwTGNLeFBO")
-ai = apiai.ApiAI("3cb50c0369bf48a4882be6edf1eb526a")
+# ai = apiai.ApiAI("3cb50c0369bf48a4882be6edf1eb526a")
 state = defaultdict(dict)
 
 
 def _random_id_number():
-    return _get_id_number(sequence=str(random.randint(999)))
+    return _get_id_number(sequence=str(random.randint(0, 999)))
 
 
 def _get_id_number(year='86', month='05', day='06', gender='male', sequence='000'):
@@ -109,7 +109,7 @@ def api():
         parameters = req['result']['parameters']
         sessionid = req['sessionId']
         if parameters['request_type'] == 'quote':
-            id_number = _get_id_number()
+            id_number = _random_id_number()
             parameters['id_number'] = id_number
 
             quote = _create_quote(cover_amount=parameters['cover_amount'],
@@ -132,10 +132,10 @@ def api():
             application = Application.apply(quote[0], policy_holder, quote[0].suggested_premium)
             state[sessionid].update({'application': application, 'policy_holder': policy_holder})
 
-            r = ai.text_request()
-            r.session_id = sessionid
-            r.query = "Hello"
-            r.getresponse()
+            # r = ai.text_request()
+            # r.session_id = sessionid
+            # r.query = "Hello"
+            # r.getresponse()
 
             response = "One more step to go :) Happy to go ahead?"
             return jsonify({"speech": response, "displayText": response})

@@ -20,6 +20,7 @@ class Application(object):
         _v.update(quotepackage.get_requirements())
 
         response = _root.post("applications", **_v)
+        print("Response [%s] - %s" % (response.status_code, response.text))
         return Application(_root, **response.json())
 
 
@@ -72,6 +73,7 @@ class Policy(object):
         if self.app_data:
             params['app_data'] = self.app_data
         response = self._root.patch("policy/" + self.policy_id, **params)
+        print("Response [%s] - %s" % (response.status_code, response.text))
         return Policy(bound=True, root=self._root, **(response.json()))
 
     def cancel(self, reason=""):
